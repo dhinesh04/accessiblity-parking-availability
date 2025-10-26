@@ -5,3 +5,7 @@ supabase
 pydantic
 sqlalchemy
 psycopg2-binary
+easyocr
+opencv-python
+pillow
+python-multipart

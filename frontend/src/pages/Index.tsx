@@ -14,6 +14,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Detector } from "@/pages/Detector";
 
 // ---- Backend base URL (edit if your backend runs elsewhere) ----
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
@@ -181,9 +182,10 @@ const Index = () => {
 
         {/* Map & Table Tabs */}
         <Tabs defaultValue="map" className="space-y-4">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsList className="grid w-full max-w-md grid-cols-3">
             <TabsTrigger value="map">Map View</TabsTrigger>
             <TabsTrigger value="table">Table View</TabsTrigger>
+            <TabsTrigger value="detector">Detector</TabsTrigger>
           </TabsList>
 
           <TabsContent value="map">
@@ -200,6 +202,13 @@ const Index = () => {
           <TabsContent value="table">
             <ParkingTable lots={parkingLots} onLotClick={handleLotClick} />
           </TabsContent>
+
+                  <TabsContent value="detector" className="space-y-4">
+          <div className="p-6 border rounded-lg shadow-lg bg-card">
+            <h2 className="text-xl font-semibold mb-4 text-center">License Plate Detector</h2>
+            <Detector />
+          </div>
+        </TabsContent>
         </Tabs>
       </main>
 

@@ -5,12 +5,15 @@ from typing import Dict, Any, List
 from schemas import ParkingLot, UpdateOccupancyRequest
 from models import fetch_lots, fetch_lot_by_lot_id, update_lot_occupancy
 from dotenv import load_dotenv
+from routes import license_plate
 load_dotenv()
 
 APP_ENV = os.getenv("APP_ENV", "local")
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
 app = FastAPI(title="OSU Accessible Parking API")
+
+app.include_router(license_plate.router)
 
 app.add_middleware(
     CORSMiddleware,
