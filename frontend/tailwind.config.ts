@@ -14,18 +14,31 @@ export default {
     },
     extend: {
       colors: {
+        // OSU Scarlet & Gray Color Palette
+        scarlet: {
+          50: '#fee5e5',
+          100: '#fcc6c6',
+          200: '#f99999',
+          300: '#f66b6b',
+          400: '#f44747',
+          500: '#BB0000', // Official OSU Scarlet
+          600: '#a60000',
+          700: '#8c0000',
+          800: '#730000',
+          900: '#5c0000',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#BB0000", // OSU Scarlet
+          foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#666666", // OSU Gray
+          foreground: "#ffffff",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -86,6 +99,10 @@ export default {
           to: {
             height: "0",
           },
+        },
+        "pulse-scarlet": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
         },
       },
       animation: {

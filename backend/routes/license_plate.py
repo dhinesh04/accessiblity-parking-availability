@@ -1,17 +1,26 @@
 import io
-import cv2
-import easyocr
-import numpy as np
 from fastapi import APIRouter, UploadFile, Form, HTTPException
 from models import fetch_lot_by_lot_id, update_lot_occupancy
 
 router = APIRouter()
 
-reader = easyocr.Reader(["en"])  # loads pretrained OCR model
 
 @router.post("/upload-plate")
 async def upload_plate(file: UploadFile, lot_id: str = Form(...)):
+    # Lazy-import heavy OCR dependencies so the backend can start without
+    # them installed. If they are missing, return a 501 telling the caller
+    # that OCR functionality isn't available in this environment.
     try:
+        import cv2
+        import easyocr
+        import numpy as np
+    except Exception as e:
+        raise HTTPException(status_code=501, detail=f"OCR dependencies not installed: {e}")
+
+    try:
+        # instantiate reader lazily (costly, but only when endpoint used)
+        reader = easyocr.Reader(["en"])
+
         # Read image bytes
         contents = await file.read()
         npimg = np.frombuffer(contents, np.uint8)
@@ -50,5 +59,7 @@ async def upload_plate(file: UploadFile, lot_id: str = Form(...)):
                 "available_accessible_spots": available,
             },
         }
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

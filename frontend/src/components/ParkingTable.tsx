@@ -7,8 +7,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ParkingLot } from "@/types/parking";
-import { MapPin } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
+import { useFavorites } from "@/hooks/useFavorites";
 
 interface ParkingTableProps {
   lots: ParkingLot[];
@@ -16,15 +18,17 @@ interface ParkingTableProps {
 }
 
 export const ParkingTable = ({ lots, onLotClick }: ParkingTableProps) => {
+  const { isFavorite, toggleFavorite } = useFavorites();
+
   const getAvailabilityBadge = (available: number, total: number) => {
     const percentage = (available / total) * 100;
     
     if (percentage > 30) {
-      return <Badge variant="outline" className="bg-success/10 text-success border-success/20">Available</Badge>;
+      return <Badge variant="outline" className="bg-success/10 text-success border-success/20" aria-label="Available parking">Available</Badge>;
     } else if (percentage > 10) {
-      return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20">Limited</Badge>;
+      return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20" aria-label="Limited parking">Limited</Badge>;
     } else {
-      return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20">Full</Badge>;
+      return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20" aria-label="Parking full">Full</Badge>;
     }
   };
 
@@ -33,6 +37,7 @@ export const ParkingTable = ({ lots, onLotClick }: ParkingTableProps) => {
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50">
+            <TableHead className="font-semibold">Favorite</TableHead>
             <TableHead className="font-semibold">Location</TableHead>
             <TableHead className="text-center font-semibold">Total Spots</TableHead>
             <TableHead className="text-center font-semibold">Occupied</TableHead>
@@ -47,7 +52,35 @@ export const ParkingTable = ({ lots, onLotClick }: ParkingTableProps) => {
               key={lot.lot_id}
               className="hover:bg-muted/50 transition-colors cursor-pointer"
               onClick={() => onLotClick(lot)}
+              role="button"
+              tabIndex={0}
+              aria-label={`${lot.lot_name} - ${lot.available_accessible_spots} spots available`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onLotClick(lot);
+                }
+              }}
             >
+              <TableCell>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(lot.lot_id);
+                  }}
+                  aria-label={isFavorite(lot.lot_id) ? `Remove ${lot.lot_name} from favorites` : `Add ${lot.lot_name} to favorites`}
+                  aria-pressed={isFavorite(lot.lot_id)}
+                >
+                  <Star
+                    className={`h-4 w-4 ${
+                      isFavorite(lot.lot_id) ? "fill-yellow-400 text-yellow-400" : "text-gray-400"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </Button>
+              </TableCell>
               <TableCell className="font-medium">{lot.lot_name}</TableCell>
               <TableCell className="text-center">{lot.total_accessible_spots}</TableCell>
               <TableCell className="text-center">{lot.occupied_accessible_spots}</TableCell>
@@ -58,16 +91,19 @@ export const ParkingTable = ({ lots, onLotClick }: ParkingTableProps) => {
                 {getAvailabilityBadge(lot.available_accessible_spots, lot.total_accessible_spots)}
               </TableCell>
               <TableCell className="text-center">
-                <button 
-                  className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="inline-flex items-center gap-1 text-sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     onLotClick(lot);
                   }}
+                  aria-label={`View ${lot.lot_name} on map`}
                 >
-                  <MapPin className="h-4 w-4" />
+                  <MapPin className="h-4 w-4" aria-hidden="true" />
                   View
-                </button>
+                </Button>
               </TableCell>
             </TableRow>
           ))}
