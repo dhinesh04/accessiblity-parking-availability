@@ -64,7 +64,7 @@ export const ParkingMap = ({ lots, apiKey, selectedLot, onMarkerClick }: Parking
                       width: "32px",
                       height: "32px",
                       borderRadius: "50% 50% 50% 0",
-                      transform: "rotate(-45deg)",
+                      transform: "translate(-50%, -100%) rotate(-45deg)",
                       backgroundColor: getMarkerColor(
                         lot.available_accessible_spots,
                         lot.total_accessible_spots
