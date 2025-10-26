@@ -47,9 +47,7 @@ APP_ENV=local
 
 ---
 
-# Database Setup (Supabase)
-
-Create table:
+# Database (Supabase)/Backend/Frontend Setup 
 
 ```sql
 create extension if not exists pgcrypto;
@@ -79,6 +77,8 @@ python -m venv env
 source env/bin/activate        # Windows: env\Scripts\activate
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
+
+--- 
 
 # Frontend Setup
 
